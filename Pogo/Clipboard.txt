@@ -1,0 +1,49 @@
+//    func setupJumpLines() {
+//        var midline = SKShapeNode(rect: CGRectMake(0, self.frame.size.height / 2, self.frame.size.width, 1))
+//        midline.strokeColor = SKColor.grayColor()
+//        world.addChild(midline)
+//
+//        var topline = SKShapeNode(rect: CGRectMake(0, self.frame.size.height, self.frame.size.width, 1))
+//        topline.strokeColor = SKColor.grayColor()
+//        world.addChild(topline)
+//
+//        var line = SKShapeNode(rect: CGRectMake(0, ball.diameter * 1, self.frame.size.width, 1))
+//        line.strokeColor = SKColor.blueColor()
+//        world.addChild(line)
+//
+//        var line2 = SKShapeNode(rect: CGRectMake(0, ball.diameter * 2, self.frame.size.width, 1))
+//        line2.strokeColor = SKColor.blueColor()
+//        world.addChild(line2)
+//
+//        var line3 = SKShapeNode(rect: CGRectMake(0, ball.diameter * 3, self.frame.size.width, 1))
+//        line3.strokeColor = SKColor.blueColor()
+//        world.addChild(line3)
+//
+//        var line4 = SKShapeNode(rect: CGRectMake(0, ball.diameter * 4, self.frame.size.width, 1))
+//        line4.strokeColor = SKColor.blueColor()
+//        world.addChild(line4)
+//
+//        var line5 = SKShapeNode(rect: CGRectMake(0, ball.diameter * 5, self.frame.size.width, 1))
+//        line5.strokeColor = SKColor.blueColor()
+//        world.addChild(line5)
+//
+//        var line6 = SKShapeNode(rect: CGRectMake(0, ball.diameter * 6, self.frame.size.width, 1))
+//        line6.strokeColor = SKColor.blueColor()
+//        world.addChild(line6)
+//
+//        var line7 = SKShapeNode(rect: CGRectMake(0, ball.diameter * 7, self.frame.size.width, 1))
+//        line7.strokeColor = SKColor.blueColor()
+//        world.addChild(line7)
+//
+//        var line8 = SKShapeNode(rect: CGRectMake(0, ball.diameter * 8, self.frame.size.width, 1))
+//        line8.strokeColor = SKColor.blueColor()
+//        world.addChild(line8)
+//
+//        var line9 = SKShapeNode(rect: CGRectMake(0, ball.diameter * 9, self.frame.size.width, 1))
+//        line9.strokeColor = SKColor.blueColor()
+//        world.addChild(line9)
+//
+//        var line10 = SKShapeNode(rect: CGRectMake(0, ball.diameter * 10, self.frame.size.width, 1))
+//        line10.strokeColor = SKColor.blueColor()
+//        world.addChild(line10)
+//    }

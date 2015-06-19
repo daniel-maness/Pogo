@@ -41,6 +41,14 @@ class PhysicsHelper {
         nodeA.zRotation = angle + convertDegreesToRadians(90)
     }
     
+    class func rotateNode(nodeA: SKNode, endNode: SKNode, toFacePosition position: CGPoint) {
+        let dx = position.x - endNode.position.x
+        let dy = position.y - endNode.position.y
+        let angle: CGFloat = atan2(dy, dx)
+        
+        nodeA.zRotation = angle + convertDegreesToRadians(90)
+    }
+    
     class func getAngleBetweenPoints(pointA: CGPoint, pointB: CGPoint) -> CGFloat {
         let dx = pointB.x - pointA.x
         let dy = pointB.y - pointA.y

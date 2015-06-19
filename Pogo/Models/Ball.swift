@@ -10,22 +10,7 @@ import Foundation
 import SpriteKit
 
 enum BallType: Int {
-    case Normal = 0, Sticky, Power, Ghost, Safety
-}
-
-class PowerMeter: SKSpriteNode {
-    var power: CGFloat = 0.0
-    var powerLevel: Int = 0
-    
-    init() {
-        let texture = SKTexture(imageNamed: "power-meter-1")
-        super.init(texture: texture, color: UIColor.clearColor(), size: texture.size())
-        self.hidden = true
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
+    case Normal = 0, Power, Sticky, Ghost, Safety
 }
 
 class Ball: SKSpriteNode {
@@ -33,9 +18,10 @@ class Ball: SKSpriteNode {
     var isTouched: Bool = false
     var lockBallType: Bool = false
     var contactCount: Int = 0
+    var hasUsedGhost: Bool = false
     var powerUpInventory: [Int] = [1, 3, 3, 3, 3]
     
-    private let ballTypes: [BallType] = [BallType.Normal, BallType.Sticky, BallType.Power, BallType.Ghost, BallType.Safety]
+    private let ballTypes: [BallType] = [BallType.Normal, BallType.Power, BallType.Sticky, BallType.Ghost, BallType.Safety]
     
     var diameter: CGFloat {
         return self.size.width
@@ -98,8 +84,6 @@ class Ball: SKSpriteNode {
             self.texture = SKTexture(imageNamed: "ball-ghost")
         case BallType.Safety:
             self.texture = SKTexture(imageNamed: "ball-safety")
-        default:
-            self.texture = SKTexture(imageNamed: "ball")
         }
     }
 }

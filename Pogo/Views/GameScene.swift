@@ -11,34 +11,33 @@ import SpriteKit
 import AVFoundation
 
 let BALL_RESTITUTION: CGFloat = 0.5
-let BALL_MASS: CGFloat = 0.1
+let BALL_MASS: CGFloat = 0.13
 let BALL_FRICTION: CGFloat = 0.2
 let BALL_ALLOWS_ROTATION: Bool = false
 
+let worldCategoryName = "world"
+let ballCategoryName = "ball"
+let platformCategoryName = "platform"
+let powerMeterCategoryName = "power-meter-"
+let safetyNetCategoryName = "safetyNet"
+
+let worldCategory:UInt32 = 0x1
+let ballCategory:UInt32 = 0x2
+let bottomCategory:UInt32 = 0x3
+let platformCategory:UInt32 = 0x4
+let safetyNetCategory:UInt32 = 0x5
+
 class GameScene: SKScene, SKPhysicsContactDelegate {
-    let worldCategoryName = "world"
-    let ballCategoryName = "ball"
-    let platformCategoryName = "platform"
-    let powerMeterCategoryName = "power-meter-"
-    
-    let ghostCategory:UInt32 = 0x1
-    let ballCategory:UInt32 = 0x2
-    let bottomCategory:UInt32 = 0x3
-    let platformCategory:UInt32 = 0x4
-    let tileMapCategory:UInt32 = 0x5
-    let worldCategory:UInt32 = 0x6
-    
     var gameScene: GameScene!
-    var world: SKNode!
+    var world: Level!
     var ball: Ball!
     var powerMeter: PowerMeter!
-    var backgroundMusicPlayer = AVAudioPlayer()
-    
-    var _maxFingerDragLength: CGFloat!
+    var safetyNet: SKShapeNode!
+//    var backgroundMusicPlayer = AVAudioPlayer()
     var _maxJumpHeight: CGFloat!
     var _originLocation: CGPoint!
     var _lastDy: CGFloat = 0.0
-
+    var _currentSurfaceBitMask:UInt32!
     
     override func didMoveToView(view: SKView) {
         self.initGameScene()
@@ -48,7 +47,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         setupScene()
         setupWorld()
         setupBall()
-        //setupJumpLines()
+    }
+    
+    override init(size: CGSize) {
+        super.init(size: size)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -62,140 +64,40 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func setupWorld() {
-        world = self.childNodeWithName(worldCategoryName)
-        world.name = worldCategoryName
-        
-        let worldRect = CGRectMake(0, 0, world.frame.size.width, world.frame.size.height)
-        let worldBorder = SKPhysicsBody(edgeLoopFromRect: worldRect)
-//        worldBorder.categoryBitMask = worldCategory
-        self.world.physicsBody = worldBorder
-        
-        _maxFingerDragLength = self.frame.height / 4
-
-        powerMeter = PowerMeter()
-        powerMeter.name = powerMeterCategoryName
-        world.addChild(powerMeter)
-        
-        setupPlatforms()
+        world = Level(size: CGSizeMake(self.size.width, 10000), ballDiameter: self.frame.size.width / 10)
+        world.position = CGPointMake(0, 0)
+        self.addChild(world)
+        self.backgroundColor = SKColor.whiteColor()
     }
-    
-    func setupPlatforms() {
-        for i in 0..<world.children.count {
-            var child = world.children[i] as! SKSpriteNode
-            if child.name == platformCategoryName {
-                child.physicsBody = SKPhysicsBody(rectangleOfSize: CGSizeMake(child.frame.size.width, child.frame.size.height))
-                child.physicsBody?.dynamic = false
-//                child.physicsBody?.categoryBitMask = platformCategory
-//                child.physicsBody?.contactTestBitMask = ballCategory
-//                child.physicsBody?.collisionBitMask = ballCategory
-            }
-        }
-    }
-    
-    func setupJumpLines() {
-        var midline = SKShapeNode(rect: CGRectMake(0, self.frame.size.height / 2, self.frame.size.width, 1))
-        midline.strokeColor = SKColor.grayColor()
-        world.addChild(midline)
         
-        var topline = SKShapeNode(rect: CGRectMake(0, self.frame.size.height, self.frame.size.width, 1))
-        topline.strokeColor = SKColor.grayColor()
-        world.addChild(topline)
-        
-        var line = SKShapeNode(rect: CGRectMake(0, ball.diameter * 1, self.frame.size.width, 1))
-        line.strokeColor = SKColor.blueColor()
-        world.addChild(line)
-        
-        var line2 = SKShapeNode(rect: CGRectMake(0, ball.diameter * 2, self.frame.size.width, 1))
-        line2.strokeColor = SKColor.blueColor()
-        world.addChild(line2)
-        
-        var line3 = SKShapeNode(rect: CGRectMake(0, ball.diameter * 3, self.frame.size.width, 1))
-        line3.strokeColor = SKColor.blueColor()
-        world.addChild(line3)
-        
-        var line4 = SKShapeNode(rect: CGRectMake(0, ball.diameter * 4, self.frame.size.width, 1))
-        line4.strokeColor = SKColor.blueColor()
-        world.addChild(line4)
-        
-        var line5 = SKShapeNode(rect: CGRectMake(0, ball.diameter * 5, self.frame.size.width, 1))
-        line5.strokeColor = SKColor.blueColor()
-        world.addChild(line5)
-        
-        var line6 = SKShapeNode(rect: CGRectMake(0, ball.diameter * 6, self.frame.size.width, 1))
-        line6.strokeColor = SKColor.blueColor()
-        world.addChild(line6)
-        
-        var line7 = SKShapeNode(rect: CGRectMake(0, ball.diameter * 7, self.frame.size.width, 1))
-        line7.strokeColor = SKColor.blueColor()
-        world.addChild(line7)
-        
-        var line8 = SKShapeNode(rect: CGRectMake(0, ball.diameter * 8, self.frame.size.width, 1))
-        line8.strokeColor = SKColor.blueColor()
-        world.addChild(line8)
-        
-        var line9 = SKShapeNode(rect: CGRectMake(0, ball.diameter * 9, self.frame.size.width, 1))
-        line9.strokeColor = SKColor.blueColor()
-        world.addChild(line9)
-        
-        var line10 = SKShapeNode(rect: CGRectMake(0, ball.diameter * 10, self.frame.size.width, 1))
-        line10.strokeColor = SKColor.blueColor()
-        world.addChild(line10)
-    }
-    
     func setupBall() {
-        ball = Ball(size: CGSizeMake(self.frame.width / 10, self.frame.width / 10))
-        ball.name = ballCategoryName
-        ball.position = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2)
-        world.addChild(ball)
-    }
-    
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
-        let touch = touches.first as! UITouch
-        let touchLocation = touch.locationInNode(self)
-        let touchedNode = self.nodeAtPoint(touchLocation)
+        self.ball = Ball(size: CGSizeMake(self.size.width / 10, self.size.width / 10))
+        self.ball.name = ballCategoryName
+        self.ball.position = CGPointMake(self.size.width / 2, 0)
+        self.world.addChild(ball)
         
-        if touchedNode.name == ballCategoryName {
-            ball.isTouched = true
-        }
+        self.ball.physicsBody?.categoryBitMask = ballCategory
+        self.ball.physicsBody?.contactTestBitMask = worldCategory | platformCategory | safetyNetCategory
+        self.ball.physicsBody?.collisionBitMask = worldCategory | platformCategory | safetyNetCategory
         
-        _originLocation = touchLocation
-        showPowerMeter(touchLocation)
-    }
-    
-    override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
-        let touch = touches.first as! UITouch
-        let touchLocation = touch.locationInNode(self)
-        
-        showPowerMeter(touchLocation)
-    }
-    
-    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
-        hidePowerMeter()
-        
-        userInteractionEnabled = false
-        
-        let touch = touches.first as! UITouch
-        let touchLocation = touch.locationInNode(self)
-        let touchedNode = self.nodeAtPoint(touchLocation)
-        
-        if touchedNode.name == ballCategoryName && powerMeter.powerLevel == 0 && ball.isTouched {
-            ball.switchBallType(ball.ballType.rawValue + 1)
-            ball.lockBallType = true
-        }
-        
-        if powerMeter.powerLevel > 0 {
-            let velocity = getVelocity(_originLocation, releaseLocation: touchLocation)
-            launchBall(velocity)
-        }
-    
-        powerMeter.powerLevel = 0
-        _originLocation = nil
-        ball.isTouched = false
+        self.powerMeter = PowerMeter(width: self.ball.diameter * 0.50, maxDragDistance: self.frame.height / 4)
+        self.powerMeter.name = powerMeterCategoryName
+        self.powerMeter.zPosition = -1
+        self.world.addChild(self.powerMeter)
     }
     
     func getVelocity(originLocation: CGPoint, releaseLocation: CGPoint) -> CGVector {
         let degrees = PhysicsHelper.getAngleBetweenPoints(originLocation, pointB: releaseLocation) * CGFloat(-180.0 / M_PI)
+        let forceModifiers = getForceModifiers(originLocation, releaseLocation: releaseLocation)
+        var force = getForce(degrees)
         
+        force.dx *= forceModifiers.multiplier * forceModifiers.dxModifier
+        force.dy *= forceModifiers.multiplier
+        
+        return CGVectorMake(force.dx, force.dy)
+    }
+    
+    func getForce(degrees: CGFloat) -> (dx: CGFloat, dy: CGFloat) {
         var dx: CGFloat = 0
         var dy: CGFloat = 0
         
@@ -229,20 +131,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 dy = (-degrees - 180) / 45
             }
         }
-        
-        var forceModifiers = getForceModifiers(originLocation, releaseLocation: releaseLocation)
-        
-        dx *= forceModifiers.forceMultiplier * forceModifiers.dxModifier
-        dy *= forceModifiers.forceMultiplier
-        
-        return CGVectorMake(dx, dy)
+
+        return (dx, dy)
     }
     
-    func getForceModifiers(originLocation: CGPoint, releaseLocation: CGPoint) -> (forceMultiplier: CGFloat, dxModifier: CGFloat) {
+    func getForceModifiers(originLocation: CGPoint, releaseLocation: CGPoint) -> (multiplier: CGFloat, dxModifier: CGFloat) {
         // These tweaks will make movement more predictable and organic feeling.
         // The values were determined from lots of playtesting.
-        let powerLevel: CGFloat = CGFloat(getPowerLevel(originLocation, toLocation: releaseLocation))
-        switch powerLevel {
+        switch powerMeter.powerLevel {
         case 13:
             return (0, 1.0)
         case 12:
@@ -274,70 +170,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
-    func getPowerLevel(fromLocation: CGPoint, toLocation: CGPoint) -> Int {
-        let power = PhysicsHelper.distanceBetweenPoints(fromLocation, second: toLocation)
-        powerMeter.power = power > _maxFingerDragLength ? _maxFingerDragLength : power
-        
-        if powerMeter.power >= _maxFingerDragLength && ball.ballType == BallType.Power {
-            return 10
-        } else if powerMeter.power > _maxFingerDragLength * 0.9 && ball.ballType == BallType.Power {
-            return 9
-        } else if powerMeter.power > _maxFingerDragLength * 0.8 && ball.ballType == BallType.Power {
-            return 8
-        } else if powerMeter.power > _maxFingerDragLength * 0.7 {
-            return 7
-        } else if powerMeter.power > _maxFingerDragLength * 0.6 {
-            return 6
-        } else if powerMeter.power > _maxFingerDragLength * 0.5 {
-            return 5
-        } else if powerMeter.power > _maxFingerDragLength * 0.4 {
-            return 4
-        } else if powerMeter.power > _maxFingerDragLength * 0.3 {
-            return 3
-        } else if powerMeter.power > _maxFingerDragLength * 0.2 {
-            return 2
-        } else if powerMeter.power > _maxFingerDragLength * 0.1 {
-            return 1
-        }
-        
-        return 0
-    }
-
-    func showPowerMeter(location: CGPoint) {
-        powerMeter.hidden = false
-        updatePowerMeter(_originLocation, toLocation: location)
-    }
-    
-    func hidePowerMeter() {
-        powerMeter.hidden = true
-    }
-    
-    func updatePowerMeter(fromLocation: CGPoint, toLocation: CGPoint) {
-        powerMeter.powerLevel = getPowerLevel(fromLocation, toLocation: toLocation)
-        
-        if powerMeter.powerLevel > 0 {
-            powerMeter.hidden = false
-        
-            let width = ball.diameter * 0.50
-            let height = width + (0.85 * width) * CGFloat(powerMeter.powerLevel)
-            
-            powerMeter.anchorPoint = CGPointMake(0.5, 0.0)
-            powerMeter.texture = SKTexture(imageNamed: powerMeterCategoryName + String(powerMeter.powerLevel))
-            powerMeter.size = CGSizeMake(width, height)
-            
-            let position = CGPointMake(self.ball.position.x, self.ball.position.y)
-            powerMeter.position = position
-            
-            var endNode = SKNode()
-            endNode.position = CGPointMake(self.ball.position.x + (fromLocation.x - toLocation.x), self.ball.position.y + (fromLocation.y - toLocation.y))
-            
-            PhysicsHelper.rotateNode(powerMeter, endNode: endNode, toFaceNode: ball)
-        } else {
-            powerMeter.hidden = true
-        }
-    }
-    
     func launchBall(velocity: CGVector) {
+        if _currentSurfaceBitMask == safetyNetCategory {
+            safetyNet.removeFromParent()
+        }
+        
+        if ball.ballType == BallType.Ghost {
+            ball.physicsBody?.contactTestBitMask = worldCategory | platformCategory | safetyNetCategory
+            ball.physicsBody?.collisionBitMask = worldCategory
+        } else if ball.ballType == BallType.Safety {
+            createSafetyNet(ball.position)
+            ball.physicsBody?.contactTestBitMask = worldCategory | platformCategory | safetyNetCategory
+            ball.physicsBody?.collisionBitMask = worldCategory | platformCategory | safetyNetCategory
+        }
+        
         ball.physicsBody?.dynamic = true
         ball.physicsBody?.restitution = BALL_RESTITUTION
         ball.physicsBody?.applyImpulse(velocity)
@@ -355,38 +201,114 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             firstBody = contact.bodyB
             secondBody = contact.bodyA
         }
+        _currentSurfaceBitMask = secondBody.categoryBitMask
         
         if ball.ballType == BallType.Sticky {
             ball.physicsBody?.velocity = CGVectorMake(0, 0)
             ball.physicsBody?.dynamic = false
-        } else if ball.ballType == BallType.Ghost {
-        
+        } else if ball.ballType == BallType.Ghost && !ball.hasUsedGhost && firstBody.categoryBitMask != worldCategory {
+            ball.hasUsedGhost = true
         }
         
         ball.contactCount += 1
     }
     
     func didEndContact(contact: SKPhysicsContact) {
-        if ball.ballType == BallType.Ghost && ball.contactCount == 0 {
-//            ball.physicsBody?.categoryBitMask = ghostCategory
-//            ball.physicsBody?.contactTestBitMask = worldCategory
-//            ball.physicsBody?.collisionBitMask = worldCategory
+        if ball.ballType == BallType.Ghost && !ball.hasUsedGhost {
+            ball.physicsBody?.contactTestBitMask = worldCategory | platformCategory | safetyNetCategory
+            ball.physicsBody?.collisionBitMask = worldCategory
         } else {
-//            ball.physicsBody?.categoryBitMask = ballCategory
-//            ball.physicsBody?.contactTestBitMask = worldCategory | platformCategory
-//            ball.physicsBody?.collisionBitMask = worldCategory | platformCategory
+            ball.physicsBody?.contactTestBitMask = worldCategory | platformCategory | safetyNetCategory
+            ball.physicsBody?.collisionBitMask = worldCategory | platformCategory | safetyNetCategory
         }
+    }
+    
+    func createSafetyNet(position: CGPoint) {
+        if let node = world.childNodeWithName(safetyNetCategoryName) {
+            node.removeFromParent()
+        }
+        
+        safetyNet = SKShapeNode(rectOfSize: CGSizeMake(self.frame.size.width, 1))
+        safetyNet.name = safetyNetCategoryName
+        safetyNet.position = CGPointMake(self.frame.size.width / 2, position.y - ball.radius - 1)
+        safetyNet.strokeColor = SKColor.orangeColor()
+        world.addChild(safetyNet)
+        
+        safetyNet.physicsBody = SKPhysicsBody(rectangleOfSize: CGSizeMake(self.frame.size.width, 1))
+        safetyNet.physicsBody?.dynamic = false
+        safetyNet.physicsBody?.categoryBitMask = safetyNetCategory
+        safetyNet.physicsBody?.contactTestBitMask = 0x0
+        safetyNet.physicsBody?.collisionBitMask = 0x0
+    }
+    
+    func centerOnNode(node: SKNode) {
+        let cameraPositionInScene: CGPoint = node.scene!.convertPoint(node.position, fromNode: node.parent!)
+
+        node.parent!.position = CGPointMake(node.parent!.position.x, node.parent!.position.y - cameraPositionInScene.y)
+    }
+    
+    func centerOnBottom() {
+//        var cameraPositionInScene: CGPoint = node.scene!.convertPoint(node.position, fromNode: node.parent!)
+//        
+//        node.parent!.position = CGPointMake(node.parent!.position.x - cameraPositionInScene.x, node.parent!.position.y - cameraPositionInScene.y)
+        self.world.position = CGPointMake(-self.frame.size.width / 2, -self.frame.size.height / 2)
+//        self.world.position = CGPointMake(-ball.position.x, -self.frame.size.height / 2)
+    }
+    
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        let touch = touches.first as UITouch?
+        let touchLocation = touch?.locationInNode(self)
+        let touchedNode = self.nodeAtPoint(touchLocation!)
+        
+        ball.isTouched = touchedNode.name == ballCategoryName
+        _originLocation = touchLocation
+    }
+    
+    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        let touch = touches.first as UITouch?
+        let touchLocation = touch?.locationInNode(self)
+        
+        powerMeter.update(_originLocation, dragToLocation: touchLocation!, originLocation: ball.position)
+    }
+    
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        userInteractionEnabled = false
+        
+        let touch = touches.first as UITouch?
+        let touchLocation = touch?.locationInNode(self)
+        let touchedNode = self.nodeAtPoint(touchLocation!)
+        
+        if touchedNode.name == ballCategoryName && powerMeter.powerLevel == 0 && ball.isTouched {
+            ball.switchBallType(ball.ballType.rawValue + 1)
+            ball.lockBallType = true
+        }
+        
+        if powerMeter.powerLevel > 0 {
+            let velocity = getVelocity(_originLocation, releaseLocation: touchLocation!)
+            launchBall(velocity)
+        }
+        
+        powerMeter.hide()
+        powerMeter.powerLevel = 0
+        _originLocation = nil
+        ball.isTouched = false
     }
     
     override func update(currentTime: NSTimeInterval) {
         
     }
-
+    
     override func didFinishUpdate() {
         if ball.position.y > self.frame.size.height / 2 {
             centerOnNode(ball)
         } else {
             centerOnBottom()
+        }
+        
+        if let node = world.childNodeWithName(safetyNetCategoryName) {
+            if ball.position.y < node.position.y {
+                node.removeFromParent()
+            }
         }
         
         switch ball.ballType {
@@ -400,27 +322,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             break
         case BallType.Safety:
             break
-        default:
-            break
         }
         
         if !ball.isMoving {
             userInteractionEnabled = true
             ball.contactCount = 0
+            ball.hasUsedGhost = false
             
             if !ball.lockBallType {
                 ball.switchBallType(0)
             }
+            
+            powerMeter.allowExtraPower = ball.ballType == BallType.Power
         }
-    }
-    
-    func centerOnNode(node: SKNode) {
-        var cameraPositionInScene: CGPoint = node.scene!.convertPoint(node.position, fromNode: node.parent!)
-
-        node.parent!.position = CGPointMake(node.parent!.position.x, node.parent!.position.y - cameraPositionInScene.y)
-    }
-    
-    func centerOnBottom() {
-        self.world.position = CGPointMake(-self.frame.size.width / 2, -self.frame.size.height / 2)
     }
 }

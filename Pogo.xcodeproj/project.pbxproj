@@ -28,6 +28,9 @@
 		AAB24C731B1FAAE000A5E1C6 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB24C701B1FAAE000A5E1C6 /* GameScene.swift */; };
 		AAB24C751B1FAB0100A5E1C6 /* Ball.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB24C741B1FAB0100A5E1C6 /* Ball.swift */; };
 		AAB24C771B1FAD1700A5E1C6 /* PhysicsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB24C761B1FAD1700A5E1C6 /* PhysicsHelper.swift */; };
+		AABF90211B20FDA7002184D6 /* Level.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABF90201B20FDA7002184D6 /* Level.swift */; };
+		AAC7E2611B31EFA4006ACC27 /* Clipboard.txt in Resources */ = {isa = PBXBuildFile; fileRef = AAC7E2601B31EFA4006ACC27 /* Clipboard.txt */; };
+		AAC7E2631B32151D006ACC27 /* PowerMeter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC7E2621B32151D006ACC27 /* PowerMeter.swift */; };
 		AAEB2A611B14D7B9000FB994 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAEB2A601B14D7B9000FB994 /* AppDelegate.swift */; };
 		AAEB2A6A1B14D7B9000FB994 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AAEB2A681B14D7B9000FB994 /* Main.storyboard */; };
 		AAEB2A6C1B14D7B9000FB994 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AAEB2A6B1B14D7B9000FB994 /* Images.xcassets */; };
@@ -68,6 +71,9 @@
 		AAB24C701B1FAAE000A5E1C6 /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		AAB24C741B1FAB0100A5E1C6 /* Ball.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ball.swift; sourceTree = "<group>"; };
 		AAB24C761B1FAD1700A5E1C6 /* PhysicsHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhysicsHelper.swift; sourceTree = "<group>"; };
+		AABF90201B20FDA7002184D6 /* Level.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Level.swift; sourceTree = "<group>"; };
+		AAC7E2601B31EFA4006ACC27 /* Clipboard.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Clipboard.txt; sourceTree = "<group>"; };
+		AAC7E2621B32151D006ACC27 /* PowerMeter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PowerMeter.swift; sourceTree = "<group>"; };
 		AAEB2A5B1B14D7B9000FB994 /* Pogo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pogo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAEB2A5F1B14D7B9000FB994 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AAEB2A601B14D7B9000FB994 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -148,6 +154,8 @@
 			isa = PBXGroup;
 			children = (
 				AAB24C741B1FAB0100A5E1C6 /* Ball.swift */,
+				AABF90201B20FDA7002184D6 /* Level.swift */,
+				AAC7E2621B32151D006ACC27 /* PowerMeter.swift */,
 				AAB24C761B1FAD1700A5E1C6 /* PhysicsHelper.swift */,
 			);
 			path = Models;
@@ -183,10 +191,11 @@
 		AAEB2A5D1B14D7B9000FB994 /* Pogo */ = {
 			isa = PBXGroup;
 			children = (
-				AAB24C6B1B1FAAE000A5E1C6 /* Controllers */,
+				AAC7E2601B31EFA4006ACC27 /* Clipboard.txt */,
+				AAB24C471B1D1F8600A5E1C6 /* Assets */,
 				AAB24C6D1B1FAAE000A5E1C6 /* Models */,
 				AAB24C6E1B1FAAE000A5E1C6 /* Views */,
-				AAB24C471B1D1F8600A5E1C6 /* Assets */,
+				AAB24C6B1B1FAAE000A5E1C6 /* Controllers */,
 				AAEB2A601B14D7B9000FB994 /* AppDelegate.swift */,
 				AAEB2A681B14D7B9000FB994 /* Main.storyboard */,
 				AAEB2A6B1B14D7B9000FB994 /* Images.xcassets */,
@@ -266,7 +275,8 @@
 		AAEB2A531B14D7B9000FB994 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Daniel Maness";
 				TargetAttributes = {
 					AAEB2A5A1B14D7B9000FB994 = {
@@ -303,6 +313,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AAEB2A6F1B14D7B9000FB994 /* LaunchScreen.xib in Resources */,
+				AAC7E2611B31EFA4006ACC27 /* Clipboard.txt in Resources */,
 				AAB24C611B1D1F8600A5E1C6 /* power-meter-9.png in Resources */,
 				AAB24C561B1D1F8600A5E1C6 /* ball.png in Resources */,
 				AAB24C5A1B1D1F8600A5E1C6 /* power-meter-2.png in Resources */,
@@ -339,11 +350,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AABF90211B20FDA7002184D6 /* Level.swift in Sources */,
 				AAB24C751B1FAB0100A5E1C6 /* Ball.swift in Sources */,
 				AAB24C731B1FAAE000A5E1C6 /* GameScene.swift in Sources */,
 				AAB24C711B1FAAE000A5E1C6 /* GameViewController.swift in Sources */,
 				AAEB2A611B14D7B9000FB994 /* AppDelegate.swift in Sources */,
 				AAB24C771B1FAD1700A5E1C6 /* PhysicsHelper.swift in Sources */,
+				AAC7E2631B32151D006ACC27 /* PowerMeter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,6 +419,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -472,6 +486,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Pogo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.deviouslogic.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -482,6 +497,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Pogo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.deviouslogic.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -500,6 +516,7 @@
 				);
 				INFOPLIST_FILE = PogoTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.deviouslogic.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pogo.app/Pogo";
 			};
@@ -515,6 +532,7 @@
 				);
 				INFOPLIST_FILE = PogoTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.deviouslogic.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pogo.app/Pogo";
 			};
